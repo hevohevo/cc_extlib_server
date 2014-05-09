@@ -9,9 +9,9 @@
 
 =begin rdoc
 Prameters(GET or POST): text, key, algorithm is utf-8
- text: Anything is OK
- key: Certification key. See KEY variables in this program.
- algorithm: "sha1" or "md5". This is optional, and the default value is "sha1"
+ - text: Anything is OK
+ - key: Certification key. See KEY variables in this program.
+ - algorithm: "sha1" or "md5". This is optional, and the default value is "sha1"
 Return: text/plain, utf-8
  The data-type is a tabel for Lua
  
@@ -22,8 +22,8 @@ Result1:
  
 Sample2: (Does not require a KEY)
  http://localhost/digest?text=hogehoge
- {result="aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d", parameter={text="hello", algorithm="sha1"}}
 Result2:
+ {result="aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d", parameter={text="hello", algorithm="sha1"}}
 =end
 
 ######################################################

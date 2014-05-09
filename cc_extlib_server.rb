@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ####################################################
 # CC_Extlib_Server
 # (Web API server to provide some extention libraries for ComputerCraft)

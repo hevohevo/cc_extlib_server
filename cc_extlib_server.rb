@@ -37,19 +37,21 @@ require 'kconv'
 IP       = '127.0.0.1' # DON'T CHANGE!! Opening to the web is very DANGER!!
 PORT     = '10080'
 LOG_FILE = 'log.txt'
-KEY = 'iloveturtle' # If KEY is false or empty-str, this program does not require key.
+
+# If KEY is false or empty-str, this program does not require key.
+KEY = 'iloveturtle'
 
 ######################################################
 ## FUNCTIONS
 
 ALGO_TYPE = ["md5","sha1"]
 
-def md5hexdigest(s)
-  return Digest::MD5.hexdigest(s)
-end
-
-def sha1hexdigest(s)
-  return Digest::SHA1.hexdigest(s)
+def digest(s, algo)
+  if algo == 'md5'
+    return Digest::MD5.hexdigest(s)
+  else
+    return Digest::SHA1.hexdigest(s)
+  end
 end
 
 def result_to_luatable(result,q_text,q_algo)
@@ -59,14 +61,10 @@ EOF
 end
 
 def certificated?(key, q_key)
-  if key or key.len > 0
-    if key == q_key
-      return true
-    else
-      return false
-    end
-  else
+  if not key or key.empty?
     return true
+  else
+    return key == q_key
   end
 end
 
@@ -75,18 +73,16 @@ class DigestProc < WEBrick::HTTPServlet::AbstractServlet
     result = nil
     q_text = req.query.key?('text') ? req.query['text'] : false
     q_algo = ALGO_TYPE.index(req.query['algorithm']) ? req.query['algorithm'] : "sha1"
-    if not certificated?(KEY, req.query['key'])
+    q_key = req.query.key?('key') ? req.query['key'] : nil
+    
+    if not certificated?(KEY, q_key)
       res.status = 403
       result = "Authorization failed."
     else
       if q_text
         if q_text.isutf8
           res.status = 200
-          if q_algo == "md5"
-            result = md5hexdigest req.query['text']
-          else
-            result = sha1hexdigest req.query['text']
-          end
+          result = digest(q_text, q_algo)
         else
           res.status = 400
           result = "Required: 'UTF-8' text"
